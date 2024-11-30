@@ -1,39 +1,65 @@
 # PokeExplorer
 
-This template should help get you started developing with Vue 3 in Vite.
+PokeExplorer is a frontend-only application that lists all Pokémon and their details. The app is designed for users to explore Pokémon in an intuitive, interactive way.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Comprehensive Pokémon List**: Browse through all Pokémon with ease.
+- **Search & Filter**: Filter Pokémon by **Name**, **Gender**, **Region**, and **Habitat**.
+- **Detailed View**: View detailed stats, abilities, and other characteristics of any selected Pokémon.
+- **Responsive Design**: Optimized for both desktop and mobile devices.
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
+---
 
 ## Project Setup
 
-```sh
+### 1. Clone the Repository
+
+```bash
+git clone <https://github.com/Sunita-Gurau/PokeExplorer.git>
+cd pokeexplorer
+```
+
+### 2. Install Dependencies
+
+Install the required dependencies using npm:
+
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+### 3. Development Server
 
-```sh
+To start the development server with hot-reloading, run:
+
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### 4. Build for Production
 
-```sh
+To create an optimized production build, run:
+
+```bash
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### 5. Linting
 
-```sh
+To run ESLint and fix any issues, use the following command:
+
+```bash
 npm run lint
 ```
+
+### 6. Format Code
+
+To automatically format the code according to the defined style, run:
+
+```bash
+npm run format
+```
+
+### Acknowledgments
+
+- Pokémon data sourced from [PokéAPI](https://pokeapi.co/).
