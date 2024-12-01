@@ -13,6 +13,12 @@ const router = createRouter({
       name: 'pokemon',
       component: HomePage,
     },
+    {
+      path: '/pokemon/:pokemonId',
+      name: 'pokemonDetail',
+      component: () => import('../views/PokemonDetail.vue'),
+      props: true,
+    },
   ],
 })
 
