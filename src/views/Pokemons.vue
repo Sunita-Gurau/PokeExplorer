@@ -99,6 +99,7 @@ const fetchPokemonList = async () => {
     )
     pokemonList.value = allPokemonDetails
     originalPokemonList.value = allPokemonDetails
+    $store.commit('pokemon/ORIGINAL_POKEMON_LIST', originalPokemonList.value)
   } catch (error) {
     console.log(error, 'error')
   } finally {
@@ -155,6 +156,10 @@ const debouncedFilterPokemon = debounce(filterPokemon, 300)
 watch(searchPokemon, debouncedFilterPokemon)
 
 onBeforeMount(() => {
-  fetchPokemonList()
+  if ($store.state.pokemon.originalPokemonList.length === 0) {
+    fetchPokemonList()
+  } else {
+    pokemonList.value = originalPokemonList.value = $store.state.pokemon.originalPokemonList
+  }
 })
 </script>

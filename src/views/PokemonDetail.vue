@@ -29,8 +29,10 @@ import Header from '../components/SharedComponents/Header.vue'
 import Icon from '../components/SharedComponents/Icon.vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { computed } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { toRaw } from 'vue'
+import { makeApiRequest } from '../api/apiHelper'
+import { getPokemonDetail } from '../api/pokimonApi'
 
 interface Pokemon {
   id: number
@@ -43,11 +45,29 @@ interface Pokemon {
 const $route = useRoute()
 const $store = useStore()
 const pokemonId = Number($route.params.pokemonId)
+const pokemonDetail = ref<Pokemon | null>(null)
 
-const pokemonDetail = computed<Pokemon | null>(() => {
-  const list = Array.isArray(toRaw($store.state.pokemon.PokemonDetailList))
-    ? toRaw($store.state.pokemon.PokemonDetailList)
-    : []
-  return list?.find((pokemon: Pokemon) => pokemon.id === pokemonId) || null
+const fetchPokemonDetail = () => {
+  const params = {
+    id: pokemonId,
+  }
+  makeApiRequest<any>(getPokemonDetail(params))
+    .then((response) => {
+      pokemonDetail.value = response
+    })
+    .catch((error) => {
+      console.log(error, 'error')
+    })
+}
+
+onBeforeMount(() => {
+  if ($store.state.pokemon.PokemonDetailList.length === 0) {
+    fetchPokemonDetail()
+  } else {
+    const list = Array.isArray(toRaw($store.state.pokemon.PokemonDetailList))
+      ? toRaw($store.state.pokemon.PokemonDetailList)
+      : []
+    pokemonDetail.value = list.find((pokemon: Pokemon) => pokemon.id === pokemonId) || null
+  }
 })
 </script>
