@@ -26,7 +26,7 @@ import Header from './components/SharedComponents/Header.vue'
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-const routes = ref(['/pokemon', '/pokemon'])
+const routes = ref(['/pokemon', '/about'])
 
 const labels = ref(['Pokemon', 'About'])
 
@@ -36,12 +36,11 @@ const route = useRoute()
 
 const toggleSideNavigation = (isSideNavigation: boolean) => {
   isSideNavigationToggled.value = isSideNavigation
-  console.log(isSideNavigationToggled, 'isSideNavigationToggled')
 }
 
 const currentLabel = computed(() => {
   const index = routes.value.indexOf(route.path)
-  return index !== -1 ? labels.value[index] : 'pokemon'
+  return index !== -1 ? labels.value[index] : 'Pokemon'
 })
 </script>
 

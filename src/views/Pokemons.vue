@@ -35,13 +35,13 @@
           class="flex w-full p-3 absolute -bottom-20 left-0 bg-slate-900/60 text-white justify-between items-center invisible group-hover:bottom-0 group-hover:visible transition-all duration-500"
         >
           <div class="flex flex-col gap-y-2">
-            <p class="text-lg font-semibold">{{ pokemon.name }}</p>
+            <p class="text-lg font-semibold">{{ convertToTitleCase(pokemon.name) }}</p>
           </div>
         </figcaption>
       </figure>
     </div>
   </div>
-  <div v-if="!pokemonList.length" class="h-80 flex justify-center items-center">
+  <div v-if="!pokemonList.length && !isLoading" class="h-80 flex justify-center items-center">
     <div>
       <Icon iconName="NoData" svgFill="stroke-gray-400" />
       <p class="text-base text-gray-500 my-4">No data Found.</p>
@@ -58,6 +58,7 @@ import Icon from '../components/SharedComponents/Icon.vue'
 import SearchBar from '../components/SharedComponents/SearchBar.vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { convertToTitleCase } from '../utils/stringMaskingUtils'
 
 interface PokemonType {
   name: string

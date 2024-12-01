@@ -102,7 +102,7 @@ const menuItems = ref([
     id: 2,
     label: 'About',
     icon: 'StarBrand',
-    route: '/pokemons',
+    route: '/about',
   },
 ])
 
