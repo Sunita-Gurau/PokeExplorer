@@ -1,5 +1,9 @@
 <template>
   <div class="">
+    <div class="w-full mb-4">
+      <SearchBar v-model="searchPokemon" :has-border="false" placeholder="Search ..." />
+    </div>
+
     <div
       v-if="isLoading"
       class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 m-3"
@@ -47,10 +51,12 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import { getPokemonList } from '../api/pokimonApi'
 import { makeApiRequest } from '../api/apiHelper'
+import debounce from 'lodash/debounce'
 import Icon from '../components/SharedComponents/Icon.vue'
+import SearchBar from '../components/SharedComponents/SearchBar.vue'
 
 interface PokemonType {
   name: string
@@ -66,24 +72,24 @@ interface PokemonResponse {
 }
 
 const pokemonList = ref<PokemonType[]>([])
+const originalPokemonList = ref<PokemonType[]>([]) // Store the full list of Pokémon
 const isLoading = ref<boolean>(false)
+const searchPokemon = ref<string>('')
 
 const fetchPokemonList = async () => {
   isLoading.value = true
   const params = { limit: 1302, offset: 0 }
 
   try {
-    // Fetch the basic list of Pokémon (names and URLs)
     const response = await makeApiRequest<PokemonResponse>(getPokemonList(params))
-
     const allPokemonDetails = await Promise.all(
       response.results.map(async (pokemon) => {
         const details = await fetchPokemonDetails(pokemon.url)
-        return { ...pokemon, image: details } // Attach the image to each Pokémon
+        return { ...pokemon, image: details }
       }),
     )
-
     pokemonList.value = allPokemonDetails
+    originalPokemonList.value = allPokemonDetails // Save original list
   } catch (error) {
     console.log(error, 'error')
   } finally {
@@ -91,7 +97,6 @@ const fetchPokemonList = async () => {
   }
 }
 
-// Fetch Pokémon details (including image)
 const fetchPokemonDetails = async (url: string) => {
   try {
     const response = await fetch(url)
@@ -102,6 +107,7 @@ const fetchPokemonDetails = async (url: string) => {
     return null
   }
 }
+
 const getRandomBgColor = () => {
   const colors = [
     'bg-red-300',
@@ -116,6 +122,22 @@ const getRandomBgColor = () => {
   const randomIndex = Math.floor(Math.random() * colors.length)
   return colors[randomIndex]
 }
+
+// Filter Pokémon by name
+const filterPokemon = () => {
+  const search = searchPokemon.value.toLowerCase().trim()
+  if (search === '') {
+    pokemonList.value = [...originalPokemonList.value] // Reset to original list
+  } else {
+    pokemonList.value = originalPokemonList.value.filter((pokemon) =>
+      pokemon.name.toLowerCase().includes(search),
+    )
+  }
+}
+
+const debouncedFilterPokemon = debounce(filterPokemon, 300)
+
+watch(searchPokemon, debouncedFilterPokemon)
 
 onBeforeMount(() => {
   fetchPokemonList()
