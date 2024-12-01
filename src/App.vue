@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="$route.name !== 'pokemonDetail'">
     <main class="flex">
       <div
         class="bg-white min-h-screen h-auto poke-transition"
@@ -15,6 +15,7 @@
       </section>
     </main>
   </div>
+  <div v-else><RouterView /></div>
 </template>
 
 <script setup lang="ts">
@@ -40,7 +41,7 @@ const toggleSideNavigation = (isSideNavigation: boolean) => {
 
 const currentLabel = computed(() => {
   const index = routes.value.indexOf(route.path)
-  return index !== -1 ? labels.value[index] : 'DashBoard'
+  return index !== -1 ? labels.value[index] : 'pokemon'
 })
 </script>
 
