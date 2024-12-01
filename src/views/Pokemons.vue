@@ -1,16 +1,15 @@
 <template>
   <div class="">
     <div class="w-full mb-4">
-      <SearchBar v-model="searchPokemon" :has-border="false" placeholder="Search ..." />
+      <SearchBar v-model="searchPokemon" placeholder="Search for Pokemon..." />
     </div>
-
     <div
       v-if="isLoading"
-      class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 m-3"
+      class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3"
     >
       <div v-for="pokemon in 100" :key="pokemon" role="status" class="animate-pulse">
         <div class="flex h-48 items-center justify-center rounded bg-gray-300 dark:bg-gray-700">
-          <Icon iconName="pokemonSkeleton" />
+          <Icon iconName="ImageSkeleton" />
         </div>
       </div>
     </div>
@@ -24,7 +23,7 @@
         :key="pokemon.name"
         class="relative group overflow-hidden cursor-pointer"
         :class="getRandomBgColor()"
-        @click="handleViewDetail(pokemon.name)"
+        @click="handleViewDetail(Number(pokemon.id))"
       >
         <img
           :src="pokemon.image"
@@ -57,11 +56,14 @@ import { makeApiRequest } from '../api/apiHelper'
 import debounce from 'lodash/debounce'
 import Icon from '../components/SharedComponents/Icon.vue'
 import SearchBar from '../components/SharedComponents/SearchBar.vue'
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 interface PokemonType {
   name: string
   url: string
   image: string
+  id: number
 }
 
 interface PokemonResponse {
@@ -70,26 +72,33 @@ interface PokemonResponse {
   previous: string | null
   results: PokemonType[]
 }
+const $router = useRouter()
+const $store = useStore()
 
 const pokemonList = ref<PokemonType[]>([])
-const originalPokemonList = ref<PokemonType[]>([]) // Store the full list of Pokémon
+const originalPokemonList = ref<PokemonType[]>([])
 const isLoading = ref<boolean>(false)
 const searchPokemon = ref<string>('')
 
 const fetchPokemonList = async () => {
   isLoading.value = true
   const params = { limit: 1302, offset: 0 }
-
   try {
     const response = await makeApiRequest<PokemonResponse>(getPokemonList(params))
     const allPokemonDetails = await Promise.all(
       response.results.map(async (pokemon) => {
         const details = await fetchPokemonDetails(pokemon.url)
-        return { ...pokemon, image: details }
+        $store.commit('pokemon/ADD_POKEMON_DETAIL', details)
+
+        return {
+          ...pokemon,
+          image: details.sprites.front_default,
+          id: details.id,
+        }
       }),
     )
     pokemonList.value = allPokemonDetails
-    originalPokemonList.value = allPokemonDetails // Save original list
+    originalPokemonList.value = allPokemonDetails
   } catch (error) {
     console.log(error, 'error')
   } finally {
@@ -101,7 +110,7 @@ const fetchPokemonDetails = async (url: string) => {
   try {
     const response = await fetch(url)
     const data = await response.json()
-    return data.sprites.front_default
+    return data
   } catch (error) {
     console.log('Error fetching Pokémon details:', error)
     return null
@@ -123,16 +132,22 @@ const getRandomBgColor = () => {
   return colors[randomIndex]
 }
 
-// Filter Pokémon by name
 const filterPokemon = () => {
   const search = searchPokemon.value.toLowerCase().trim()
   if (search === '') {
-    pokemonList.value = [...originalPokemonList.value] // Reset to original list
+    pokemonList.value = [...originalPokemonList.value]
   } else {
     pokemonList.value = originalPokemonList.value.filter((pokemon) =>
       pokemon.name.toLowerCase().includes(search),
     )
   }
+}
+
+const handleViewDetail = (pokemonId: number) => {
+  $router.push({
+    name: 'pokemonDetail',
+    params: { pokemonId: pokemonId },
+  })
 }
 
 const debouncedFilterPokemon = debounce(filterPokemon, 300)
