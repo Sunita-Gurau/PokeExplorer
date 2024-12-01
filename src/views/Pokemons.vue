@@ -1,14 +1,12 @@
 <template>
-  <main>
-    <div class="w-full bg-red-500 h-screen font-extrabold">
-      <h1>Pokemons</h1>
-      <ul>
-        <li v-for="pokemon in pokemonList" :key="pokemon.name">
-          {{ pokemon.name }}
-        </li>
-      </ul>
-    </div>
-  </main>
+  <div class="">
+    <h1>Pokemons</h1>
+    <ul>
+      <li v-for="pokemon in pokemonList" :key="pokemon.name">
+        {{ pokemon.name }}
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">
