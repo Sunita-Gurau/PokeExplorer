@@ -1,16 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomePage from '../views/HomePage.vue'
+import HomePage from '../views/Pokemons.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/pokemons',
+      redirect: '/pokemon',
     },
     {
-      path: '/pokemons',
-      name: 'pokemons',
+      path: '/pokemon',
+      name: 'pokemon',
       component: HomePage,
     },
   ],
