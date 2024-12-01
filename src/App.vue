@@ -3,7 +3,7 @@
     <main class="flex">
       <div
         class="bg-white min-h-screen h-auto poke-transition"
-        :class="isSideNavigationToggled ? 'w-14' : 'sm:w-66 w-14'"
+        :class="isSideNavigationToggled ? 'w-16 mr-2' : 'sm:w-66 w-16 mr-1'"
       >
         <SideNav @toggle-side-navigation="toggleSideNavigation" />
       </div>
