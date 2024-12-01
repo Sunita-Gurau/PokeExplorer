@@ -1,7 +1,10 @@
 <template>
-  <div :class="isSideNavigationToggled ? 'my-6 mx-2' : 'sm:auto my-6 mx-2 sm:m-6'">
+  <div
+    :class="isSideNavigationToggled ? 'my-6 mx-2' : 'sm:auto my-6 mx-2 sm:m-6'"
+    class="poke-transition fixed"
+  >
     <div
-      class="w-auto mr-4 cursor-pointer mb-2"
+      class="w-[180px] mr-4 cursor-pointer mb-2 poke-transition"
       :class="isSideNavigationToggled ? 'hidden' : 'hidden sm:block'"
     >
       <div class="flex text-primary-700 gap-2 items-center">
@@ -23,7 +26,7 @@
     </div>
     <div>
       <div
-        class="text-primary-500 font-normal text-sm py-4 w-auto"
+        class="text-primary-500 font-normal text-sm py-4 w-auto poke-transition"
         :class="isSideNavigationToggled ? 'hidden' : 'hidden sm:block'"
       >
         MAIN MENU
@@ -49,6 +52,7 @@
                 ? 'flex items-center justify-center'
                 : 'sm:justify-start flex items-center justify-center'
             "
+            class="poke-transition"
           >
             <Icon
               :iconName="menuItem.icon"
@@ -98,7 +102,7 @@ const menuItems = ref([
     id: 2,
     label: 'About',
     icon: 'StarBrand',
-    route: '/pokemons',
+    route: '/about',
   },
 ])
 
