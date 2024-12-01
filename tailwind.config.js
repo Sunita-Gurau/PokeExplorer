@@ -30,7 +30,7 @@ export default {
         '32px': ['2rem'],
       },
       width: {
-        66: '17rem',
+        66: '15rem',
         1: '0.0625rem',
       },
     },
