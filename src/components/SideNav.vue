@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import Icon from './SharedComponents/Icon.vue'
 import Header from './SharedComponents/Header.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -141,4 +141,12 @@ const isItemHovered = (item: MenuItem) => hoveredItem.value.has(item)
 const svgFillIcon = (item: MenuItem) => {
   return isItemHovered(item)
 }
+
+watch(
+  isSideNavigationToggled,
+  (newVal) => {
+    emits('toggle-side-navigation', newVal)
+  },
+  { immediate: true },
+)
 </script>

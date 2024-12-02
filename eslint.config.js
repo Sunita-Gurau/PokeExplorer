@@ -20,6 +20,8 @@ export default [
     rules: {
       'vue/multi-word-component-names': 'off',
       '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-empty-interface': 'off',
+      '@typescript-eslint/no-empty-object-type': ['error', { allowObjectTypes: true }],
     },
   },
 ]
