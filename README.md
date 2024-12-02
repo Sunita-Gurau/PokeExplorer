@@ -1,11 +1,11 @@
-# PokeExplorer
+# Pokedex
 
-PokeExplorer is a frontend-only application that lists all Pokémon and their details. The app is designed for users to explore Pokémon in an intuitive, interactive way.
+Pokedex is a frontend-only application that lists all Pokémon and their details. The app is designed for users to explore Pokémon in an intuitive, interactive way.
 
 ## Features
 
 - **Comprehensive Pokémon List**: Browse through all Pokémon with ease.
-- **Search & Filter**: Filter Pokémon by **Name**, **Gender**, **Region**, and **Habitat**.
+- **Search & Filter**: Filter Pokémon by **Name**
 - **Detailed View**: View detailed stats, abilities, and other characteristics of any selected Pokémon.
 - **Responsive Design**: Optimized for both desktop and mobile devices.
 
