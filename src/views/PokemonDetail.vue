@@ -112,12 +112,12 @@
 import Header from '../components/SharedComponents/Header.vue'
 import Icon from '../components/SharedComponents/Icon.vue'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, onMounted, ref } from 'vue'
 import { toRaw } from 'vue'
 import { makeApiRequest } from '../api/apiHelper'
 import { getPokemonDetail } from '../api/pokimonApi'
 import { convertToTitleCase } from '../utils/stringMaskingUtils'
+import { usePokemonStore } from '../store/index'
 
 interface Pokemon {
   id: number
@@ -134,7 +134,8 @@ interface Pokemon {
 }
 
 const $route = useRoute()
-const $store = useStore()
+const pokemonStore = usePokemonStore()
+
 const pokemonId = Number($route.params.pokemonId)
 const pokemonDetail = ref<Pokemon | null>(null)
 
@@ -151,14 +152,7 @@ const fetchPokemonDetail = () => {
     })
 }
 
-onBeforeMount(() => {
-  if ($store.state.pokemon.PokemonDetailList.length === 0) {
-    fetchPokemonDetail()
-  } else {
-    const list = Array.isArray(toRaw($store.state.pokemon.PokemonDetailList))
-      ? toRaw($store.state.pokemon.PokemonDetailList)
-      : []
-    pokemonDetail.value = list.find((pokemon: Pokemon) => pokemon.id === pokemonId) || null
-  }
+onMounted(() => {
+  fetchPokemonDetail()
 })
 </script>

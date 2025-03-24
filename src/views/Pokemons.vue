@@ -1,5 +1,7 @@
 <template>
   <div class="">
+    <!-- {{ pokemonStore.originalPokemonList }} -->
+{{ pokemonStore.originalPokemonList.length }}
     <div class="w-full mb-4">
       <SearchBar v-model="searchPokemon" placeholder="Search for Pokemon..." />
     </div>
@@ -50,15 +52,15 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref, watch } from 'vue'
+import { onBeforeMount, onMounted, ref, watch } from 'vue'
 import { getPokemonList } from '../api/pokimonApi'
 import { makeApiRequest } from '../api/apiHelper'
 import debounce from 'lodash/debounce'
 import Icon from '../components/SharedComponents/Icon.vue'
 import SearchBar from '../components/SharedComponents/SearchBar.vue'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 import { convertToTitleCase } from '../utils/stringMaskingUtils'
+import { usePokemonStore } from '../store/index'
 
 interface PokemonType {
   name: string
@@ -74,7 +76,7 @@ interface PokemonResponse {
   results: PokemonType[]
 }
 const $router = useRouter()
-const $store = useStore()
+const pokemonStore = usePokemonStore()
 
 const pokemonList = ref<PokemonType[]>([])
 const originalPokemonList = ref<PokemonType[]>([])
@@ -89,7 +91,7 @@ const fetchPokemonList = async () => {
     const allPokemonDetails = await Promise.all(
       response.results.map(async (pokemon) => {
         const details = await fetchPokemonDetails(pokemon.url)
-        $store.commit('pokemon/ADD_POKEMON_DETAIL', details)
+    
 
         return {
           ...pokemon,
@@ -100,7 +102,7 @@ const fetchPokemonList = async () => {
     )
     pokemonList.value = allPokemonDetails
     originalPokemonList.value = allPokemonDetails
-    $store.commit('pokemon/ORIGINAL_POKEMON_LIST', originalPokemonList.value)
+      pokemonStore.setOriginalPokemonList(allPokemonDetails);
   } catch (error) {
     console.log(error, 'error')
   } finally {
@@ -112,6 +114,10 @@ const fetchPokemonDetails = async (url: string) => {
   try {
     const response = await fetch(url)
     const data = await response.json()
+    if (data) {
+      console.log(data,"details");
+      // pokemonStore.setPokemonDetails(data);
+    }
     return data
   } catch (error) {
     console.log('Error fetching Pokémon details:', error)
@@ -156,11 +162,12 @@ const debouncedFilterPokemon = debounce(filterPokemon, 300)
 
 watch(searchPokemon, debouncedFilterPokemon)
 
-onBeforeMount(() => {
-  if ($store.state.pokemon.originalPokemonList.length === 0) {
-    fetchPokemonList()
-  } else {
-    pokemonList.value = originalPokemonList.value = $store.state.pokemon.originalPokemonList
-  }
+onMounted(() => {
+  fetchPokemonList()
+// if (pokemonStore.originalPokemonList.length === 0) {
+//     fetchPokemonList()
+//   } else {
+//     pokemonList.value = [...pokemonStore.originalPokemonList]
+//     originalPokemonList.value = [...pokemonStore.originalPokemonList]  }
 })
 </script>
